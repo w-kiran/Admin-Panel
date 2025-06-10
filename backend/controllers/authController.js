@@ -120,3 +120,11 @@ export const logout = async (req, res) => {
     }
 }
 
+export const checkAdmin = async (req,res) => {
+    return res.json({
+        id: req.user.id,
+        email: req.user.email,
+        role: req.user.role,
+    })
+}
+
