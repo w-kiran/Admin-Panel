@@ -209,7 +209,7 @@ const Dashboard = () => {
 
                         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8">
                             {/* Chart Section */}
-                            <div className="w-full md:w-1/2 h-72">
+                            <div className="w-100 h-72">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
                                         <Pie

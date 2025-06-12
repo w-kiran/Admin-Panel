@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import Home from './pages/Home'
 import { Route, Routes } from 'react-router-dom'
 import AdminPanel from './pages/AdminPanel'
+import ProtectedRoutes from './components/ProtectedRoutes'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -15,9 +16,9 @@ function App() {
         <Routes>
           <Route path='/login' element={<Login/>}/>
           <Route path='/signup' element={<Signup/>}/>
-          <Route path='/' element={<Home/>}/>
-          <Route path='/home' element={<Home/>}/>
-          <Route path='/admin' element={<AdminPanel/>}/>
+          <Route path='/' element={<ProtectedRoutes><Home/></ProtectedRoutes>}/>
+          <Route path='/home' element={<ProtectedRoutes><Home/></ProtectedRoutes>}/>
+          <Route path='/admin' element={<ProtectedRoutes><AdminPanel/></ProtectedRoutes>}/>
         </Routes>
       </div>
     </>

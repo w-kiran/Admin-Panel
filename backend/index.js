@@ -3,6 +3,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import router from "./routes/authRoute.js"
 import adminrouter from "./routes/adminCheckRoute.js"
+import rolerouter from "./routes/roleChangeRoute.js"
 
 const app= express()
 app.use(express.json())
@@ -17,6 +18,7 @@ app.use(cors(corsOption))
 
 app.use("/api/auth",router)
 app.use("/api/auth",adminrouter)
+app.use("/api/auth",rolerouter)
 
 const PORT = 8000
 app.listen(PORT,()=>{

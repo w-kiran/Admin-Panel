@@ -1,12 +1,14 @@
 import axios from 'axios';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { BACKEND_URL } from '../../configURL';
+import { useGetMe } from '../hooks/useGetMe';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const {user,loading1}=useGetMe();
   const formRef = useRef(null);
   const navigate = useNavigate();
 
@@ -44,34 +46,40 @@ const Login = () => {
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+  
+  useEffect(() => {
+  if (!loading1 && user) {
+    navigate('/');
+  }
+}, [user, loading1, navigate]);
 
   return (
     <div className="min-h-screen w-full flex flex-col md:flex-row">
-      {/* Left - Promo */}
-      <div className="h-screen flex flex-col justify-center items-center md:w-1/2 bg-orange-400 text-slate-900 px-6 sm:px-10 py-8 md:py-0">
+      {/* Left - Promo Section (Darker background, lighter text) */}
+      <div className="h-screen flex flex-col justify-center items-center md:w-1/2 bg-gray-900 text-white px-6 sm:px-10 py-8 md:py-0 rounded-r-lg shadow-xl">
         <div className="max-w-md text-center md:text-left">
-          <h1 className="text-4xl sm:text-5xl font-bold leading-tight mb-4">Welcome Back!!</h1>
-          <p className="text-base sm:text-lg mb-6">
+          <h1 className="text-4xl sm:text-5xl font-bold leading-tight mb-4 rounded-lg">Welcome Back!</h1>
+          <p className="text-base sm:text-lg mb-6 rounded-lg">
             Log in to access your seller account and manage your products easily.
           </p>
           <button
             onClick={scrollToForm}
-            className="bg-slate-900 text-orange-400 px-4 py-2 rounded hover:bg-slate-800 transition md:hidden"
+            className="bg-[#13152a] text-white px-6 py-3 rounded-full hover:[#13152a]transition-all duration-300 ease-in-out md:hidden shadow-lg"
           >
             Log In Now
           </button>
         </div>
       </div>
 
-      {/* Right - Form */}
+      {/* Right - Form Section (Lighter background, darker text) */}
       <div
         ref={formRef}
-        className="flex flex-col justify-center items-center md:w-1/2 bg-slate-900 text-white px-6 sm:px-10 md:px-16 py-12 h-screen md:h-auto"
+        className="flex flex-col justify-center items-center md:w-1/2 bg-white text-gray-800 px-6 sm:px-10 md:px-16 py-12 h-screen md:h-auto rounded-l-lg shadow-xl"
       >
         <div className="w-full max-w-md space-y-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center md:text-left">Log Into Your Account</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center md:text-left text-gray-900">Log Into Your Account</h2>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email */}
+            {/* Email Input */}
             <div className="relative">
               <input
                 type="email"
@@ -80,11 +88,11 @@ const Login = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Email Address"
-                className="w-full bg-transparent border-b-2 border-gray-400 text-white py-2 focus:outline-none focus:border-orange-400"
+                className="w-full bg-transparent border-b-2 border-gray-300 text-gray-800 py-2 focus:outline-none focus:border-[#13152a] transition duration-200 rounded-md"
               />
             </div>
 
-            {/* Password */}
+            {/* Password Input */}
             <div className="relative">
               <input
                 type="password"
@@ -93,21 +101,24 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password"
-                className="w-full bg-transparent border-b-2 border-gray-400 text-white py-2 focus:outline-none focus:border-orange-400"
+                className="w-full bg-transparent border-b-2 border-gray-300 text-gray-800 py-2 focus:border-[#13152a] focus:outline-none transition duration-200 rounded-md"
               />
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
-              className="cursor-pointer w-full bg-orange-400 text-slate-900 font-semibold py-2 rounded hover:bg-orange-300 transition"
+              className="cursor-pointer w-full bg-[#1d1f3d] text-white font-semibold py-3 rounded-full hover:bg-[#3c4070] transition-all duration-300 ease-in-out shadow-md"
+              disabled={loading} // Disable button while loading
             >
-              Log In
+              {loading ? 'Logging in...' : 'Log In'}
             </button>
           </form>
 
-          <p className="text-sm text-center text-gray-400 mt-6">
+          {/* New User Link */}
+          <p className="text-sm text-center text-gray-500 mt-6">
             New here?{" "}
-            <a href="/signup" className="text-orange-400 hover:underline">
+            <a href="/signup" className="text-[#13152a] hover:underline">
               Create an account
             </a>
           </p>

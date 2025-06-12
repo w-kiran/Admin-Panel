@@ -1,12 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { BACKEND_URL } from '../../configURL';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useGetMe } from '../hooks/useGetMe';
 
 const Signup = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false)
+  const {user,loading1}=useGetMe();
   const formRef = useRef(null);
   const navigate = useNavigate();
 
@@ -46,38 +48,40 @@ const Signup = () => {
     formRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+ useEffect(() => {
+  if (!loading1 && user) {
+    navigate('/');
+  }
+}, [user, loading1, navigate]);
+
   return (
     <div className="min-h-screen w-full flex flex-col md:flex-row">
-      {/* Left - Promo */}
-      <div className="h-screen flex flex-col justify-center items-center md:w-1/2 bg-orange-400 text-slate-900 px-6 sm:px-10 py-8 md:py-0">
+      {/* Left - Promo Section (Darker background, lighter text) */}
+      <div className="h-screen flex flex-col justify-center items-center md:w-1/2 bg-gray-900 text-white px-6 sm:px-10 py-8 md:py-0 rounded-r-lg shadow-xl">
         <div className="max-w-md text-center md:text-left">
           <h1 className="text-4xl sm:text-5xl font-bold leading-tight mb-4">Become a Seller</h1>
           <p className="text-base sm:text-lg mb-6">
             Join our platform and start selling your products to millions of customers worldwide.
           </p>
-          <img
-            src="https://illustrations.popsy.co/white/online-shopping.svg"
-            alt="ecommerce"
-            className="w-48 sm:w-64 md:w-full mx-auto md:mx-0 mb-6 max-w-xs"
-          />
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cum at voluptate odio tempore non ipsum dicta ducimus consequuntur, necessitatibus aliquam reiciendis ex nobis deserunt possimus natus, sequi asperiores id omnis!
           <button
             onClick={scrollToForm}
-            className="cursor-pointer bg-slate-900 text-orange-400 px-4 py-2 rounded hover:bg-slate-800 transition md:hidden"
+            className="cursor-pointer bg-[#13152a] text-white px-6 py-3 rounded-full hover:bg-[#13152a] transition-all duration-300 ease-in-out md:hidden shadow-lg"
           >
             Get Started
           </button>
         </div>
       </div>
 
-      {/* Right - Form */}
+      {/* Right - Form Section (Lighter background, darker text) */}
       <div
         ref={formRef}
-        className="flex flex-col justify-center items-center md:w-1/2 bg-slate-900 text-white px-6 sm:px-10 md:px-16 py-12 h-screen md:h-auto"
+        className="flex flex-col justify-center items-center md:w-1/2 bg-white text-gray-800 px-6 sm:px-10 md:px-16 py-12 h-screen md:h-auto rounded-l-lg shadow-xl"
       >
         <div className="w-full max-w-md space-y-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center md:text-left">Create Your Account</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center md:text-left text-gray-900">Create Your Account</h2>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Full Name */}
+            {/* Full Name Input */}
             <div className="relative">
               <input
                 type="text"
@@ -86,11 +90,11 @@ const Signup = () => {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Full Name"
-                className="w-full bg-transparent border-b-2 border-gray-400 text-white py-2 focus:outline-none focus:border-orange-400"
+                className="w-full bg-transparent border-b-2 border-gray-300 text-gray-800 py-2 focus:outline-none focus:border-[#13152a] transition duration-200 rounded-md"
               />
             </div>
 
-            {/* Email */}
+            {/* Email Input */}
             <div className="relative">
               <input
                 type="email"
@@ -99,11 +103,11 @@ const Signup = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Email Address"
-                className="w-full bg-transparent border-b-2 border-gray-400 text-white py-2 focus:outline-none focus:border-orange-400"
+                className="w-full bg-transparent border-b-2 border-gray-300 text-gray-800 py-2 focus:outline-none focus:border-[#13152a] transition duration-200 rounded-md"
               />
             </div>
 
-            {/* Password */}
+            {/* Password Input */}
             <div className="relative">
               <input
                 type="password"
@@ -112,21 +116,24 @@ const Signup = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password"
-                className="w-full bg-transparent border-b-2 border-gray-400 text-white py-2 focus:outline-none focus:border-orange-400"
+                className="w-full bg-transparent border-b-2 border-gray-300 text-gray-800 py-2 focus:outline-none focus:border-[#13152a] transition duration-200 rounded-md"
               />
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
-              className="cursor-pointer w-full bg-orange-400 text-slate-900 font-semibold py-2 rounded hover:bg-orange-300 transition"
+              className="cursor-pointer w-full bg-[#13152a] text-white font-semibold py-3 rounded-full hover:bg-[#13152a] transition-all duration-300 ease-in-out shadow-md"
+              disabled={loading} // Disable button while loading
             >
-              Register
+              {loading ? 'Registering...' : 'Register'}
             </button>
           </form>
 
-          <p className="text-sm text-center text-gray-400 mt-6">
+          {/* Existing User Link */}
+          <p className="text-sm text-center text-gray-500 mt-6">
             Already registered?{" "}
-            <a href="/login" className="text-orange-400 hover:underline">
+            <a href="/login" className="text-[#13152a] hover:underline">
               Log in here
             </a>
           </p>

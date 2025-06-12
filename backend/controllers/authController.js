@@ -72,18 +72,18 @@ export const login = async (req, res) => {
         }
 
         const comparePassword = await bcrypt.compare(password, existinguser.password)
-        
-        if(!comparePassword){
-            return res.json({error:"Invalid Credentials"})
+
+        if (!comparePassword) {
+            return res.json({ error: "Invalid Credentials" })
         }
-        
+
         const payload = {
             id: existinguser.id,
             name: existinguser.name,
             email: existinguser.email,
             role: existinguser.role
         }
-        const token = jwt.sign(payload,process.env.JWT_SECRET)
+        const token = jwt.sign(payload, process.env.JWT_SECRET)
 
         // return res.cookie('token', token, {
         //     httpOnly: true,
@@ -99,7 +99,7 @@ export const login = async (req, res) => {
         return res.cookie('token', token, { httpOnly: true, sameSite: 'strict', maxAge: 1 * 24 * 60 * 60 * 1000 }).json({
             message: `${existinguser.name} Logged in successfully`,
             success: true,
-            user:payload
+            user: payload
         })
     } catch (error) {
         console.error("Login Error:", error)
@@ -120,7 +120,7 @@ export const logout = async (req, res) => {
     }
 }
 
-export const checkAdmin = async (req,res) => {
+export const checkAdmin = async (req, res) => {
     return res.json({
         id: req.user.id,
         email: req.user.email,
@@ -128,3 +128,55 @@ export const checkAdmin = async (req,res) => {
     })
 }
 
+export const getAllUsers = async (req, res) => {
+    try {
+        const allUsers = await prisma.user.findMany({
+            orderBy: {
+                createdAt: 'asc', // or 'desc' depending on what you want
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+                createdAt: true,
+            },
+        });
+
+
+        return res.status(200).json({
+            message: 'All users found',
+            success: true,
+            users: allUsers,
+        });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        return res.status(500).json({
+            message: 'Server error while fetching users',
+            success: false,
+        });
+    }
+};
+
+export const getMe = async (req,res) =>{
+    try {
+        const Me = await req.user;
+        if (!Me) {
+            return res.status(404).json({
+                message: "Log in first",
+                success: false
+            })
+        }
+        
+        return res.status(200).json({
+            success: true,
+            message:"User found",
+            Me
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Server error while fetching users',
+            success: false,
+        });
+    }
+}
